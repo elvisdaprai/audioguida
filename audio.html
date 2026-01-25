@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Audioguida</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registrato!'));
+  }
+  </script>
+
+</head>
+
+<body>
+  <h1>🎧 Audioguida</h1>
+
+  <button onclick="playAudio('audio/test1.mp3')">
+    🏛️ Museo
+  </button>
+
+  <button onclick="playAudio('audio/test1.mp3')">
+    🏟️ Piazza
+  </button>
+
+  <button onclick="playAudio('audio/test1.mp3')">
+    🗿 Monumento
+  </button>
+
+  <br><br>
+
+  <button onclick="location.href='index.html'">
+    ⬅️ Torna alla Home
+  </button>
+
+  <audio id="player"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>

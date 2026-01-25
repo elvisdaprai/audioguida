@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Mappa del percorso</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 10px;
+    }
+
+    #map {
+      height: 80vh;
+      width: 100%;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin: 15px;
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registrato!'));
+  }
+  </script>
+
+</head>
+<body>
+
+  <h1>🗺️ Percorso della visita</h1>
+
+  <div id="map"></div>
+
+  <a href="index.html">⬅️ Torna alla Home</a>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // 1️⃣ Creiamo la mappa e scegliamo il punto iniziale (es. Milano)
+    var map = L.map('map').setView([45.4642, 9.1900], 14);
+
+    // 2️⃣ Carichiamo la mappa OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // 3️⃣ Aggiungiamo i marker delle tappe
+    L.marker([45.4642, 9.1900])
+      .addTo(map)
+      .bindPopup('📍 Duomo di Milano');
+
+    L.marker([45.4670, 9.1890])
+      .addTo(map)
+      .bindPopup('📍 Galleria Vittorio Emanuele II');
+
+    L.marker([45.4685, 9.1815])
+      .addTo(map)
+      .bindPopup('📍 Castello Sforzesco');
+
+    // 4️⃣ Mostriamo la posizione dell'utente
+    map.locate({setView: true, maxZoom: 16});
+
+    function onLocationFound(e) {
+      var radius = e.accuracy;
+      L.marker(e.latlng).addTo(map)
+        .bindPopup("Sei qui! (circa " + Math.round(radius) + " metri)").openPopup();
+    }
+
+    map.on('locationfound', onLocationFound);
+
+    // 5️⃣ Gestione errori GPS
+    function onLocationError(e) {
+      alert("Impossibile ottenere la posizione: " + e.message);
+    }
+
+    map.on('locationerror', onLocationError);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Audioguida della città</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registrato!'));
+  }
+  </script>
+</head>
+
+<body>
+  <h1>🏙️ Audioguida della città</h1>
+
+  <button onclick="location.href='mappa.html'">
+    🗺️ Vai alla mappa
+  </button>
+
+  <button onclick="location.href='audio.html'">
+    🎧 Ascolta l’audioguida
+  </button>
+
+  <script src="app.js"></script>
+</body>
+</html>
