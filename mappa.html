@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <title>Percorso audioguida Venezia</title>
 
-  <!-- CSS (anti-cache) -->
-  <link rel="stylesheet" href="style.css?v=3">
+  <!-- CSS con anti-cache -->
+  <link rel="stylesheet" href="style.css?v=4">
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
   <!-- Leaflet Routing Machine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 
@@ -51,20 +50,19 @@
 
 <a href="index.html">⬅️ Torna alla Home</a>
 
-<!-- JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
 <script>
-  // 1️⃣ Inizializziamo la mappa
+  // Inizializza mappa
   var map = L.map('map').setView([45.4419, 12.3216], 14);
 
-  // 2️⃣ Mappa OpenStreetMap
+  // OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
   }).addTo(map);
 
-  // 3️⃣ Coordinate delle tappe (ordine della gita)
+  // Coordinate tappe
   var tappe = [
     { nome: "1️⃣ Stazione Santa Lucia", coord: [45.4419, 12.3216] },
     { nome: "2️⃣ Ponte di Rialto", coord: [45.4380, 12.3358] },
@@ -75,31 +73,36 @@
     { nome: "7️⃣ Ritorno alla Stazione", coord: [45.4419, 12.3216] }
   ];
 
-  // 4️⃣ Aggiungiamo i marker
+  // Aggiungi marker con popup
   tappe.forEach(tappa => {
     L.marker(tappa.coord)
       .addTo(map)
       .bindPopup(`<div style="font-size:1.4em; font-weight:bold;">${tappa.nome}</div>`);
   });
 
-  // 5️⃣ Creiamo il percorso pedonale reale
-  L.Routing.control({
-  waypoints: tappe.map(t => L.latLng(t.coord[0], t.coord[1])),
-  lineOptions: {
-    styles: [{ color: '#007bff', weight: 6 }]
-  },
-  createMarker: function() { return null; }, // ⭐ QUESTA RIGA
-  addWaypoints: false,
-  draggableWaypoints: false,
-  routeWhileDragging: false,
-  show: false,
-  router: L.Routing.osrmv1({
-    serviceUrl: 'https://router.project-osrm.org/route/v1'
-  })
-}).addTo(map);
+  // Funzione per creare routing tratti consecutivi
+  function creaTratto(start, end) {
+    L.Routing.control({
+      waypoints: [
+        L.latLng(start[0], start[1]),
+        L.latLng(end[0], end[1])
+      ],
+      createMarker: () => null, // marker proprio
+      lineOptions: { styles: [{ color: '#007bff', weight: 6 }] },
+      addWaypoints: false,
+      draggableWaypoints: false,
+      routeWhileDragging: false,
+      show: false,
+      router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
+    }).addTo(map);
+  }
 
+  // Crea tutti i tratti consecutivi
+  for (let i = 0; i < tappe.length - 1; i++) {
+    creaTratto(tappe[i].coord, tappe[i+1].coord);
+  }
 
-  // 6️⃣ GPS dell'utente
+  // GPS utente
   map.locate({ setView: false, enableHighAccuracy: true });
 
   map.on('locationfound', function(e) {
@@ -109,14 +112,12 @@
       .openPopup();
   });
 
+  map.on('locationerror', function(e) {
+    console.warn("GPS non disponibile: " + e.message);
+  });
+
 </script>
 
 </body>
 </html>
-
-
-</body>
-</html>
-
-
 
