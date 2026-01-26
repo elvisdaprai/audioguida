@@ -84,18 +84,20 @@
 
   // 5️⃣ Creiamo il percorso pedonale reale
   L.Routing.control({
-    waypoints: tappe.map(t => L.latLng(t.coord[0], t.coord[1])),
-    lineOptions: {
-      styles: [{ color: '#007bff', weight: 6 }]
-    },
-    addWaypoints: false,
-    draggableWaypoints: false,
-    routeWhileDragging: false,
-    show: false,
-    router: L.Routing.osrmv1({
-      serviceUrl: 'https://router.project-osrm.org/route/v1'
-    })
-  }).addTo(map);
+  waypoints: tappe.map(t => L.latLng(t.coord[0], t.coord[1])),
+  lineOptions: {
+    styles: [{ color: '#007bff', weight: 6 }]
+  },
+  createMarker: function() { return null; }, // ⭐ QUESTA RIGA
+  addWaypoints: false,
+  draggableWaypoints: false,
+  routeWhileDragging: false,
+  show: false,
+  router: L.Routing.osrmv1({
+    serviceUrl: 'https://router.project-osrm.org/route/v1'
+  })
+}).addTo(map);
+
 
   // 6️⃣ GPS dell'utente
   map.locate({ setView: false, enableHighAccuracy: true });
@@ -115,5 +117,6 @@
 
 </body>
 </html>
+
 
 
