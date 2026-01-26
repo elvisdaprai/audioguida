@@ -9,4 +9,26 @@ button {
   margin: 15px auto;
   padding: 15px;
   font-size: 18px;
+
+}
+/* Stile pulsanti Home / Audio / Mappa */
+button {
+  font-size: 1.5em;       /* testo più grande */
+  padding: 15px 25px;     /* più spazio intorno */
+  margin: 10px;           /* separazione tra pulsanti */
+  border-radius: 12px;    /* angoli arrotondati */
+  background-color: #2b7de9; /* colore pulsante */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1a5bb8; /* effetto al passaggio del mouse */
+}
+
+/* Stile testo generale */
+body, h1, p {
+  font-size: 1.3em;        /* più leggibile */
+  line-height: 1.5em;
 }
