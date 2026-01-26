@@ -4,13 +4,11 @@
   <meta charset="UTF-8">
   <title>Percorso audioguida Venezia</title>
 
-  <!-- CSS con anti-cache -->
-  <link rel="stylesheet" href="style.css?v=4">
+  <!-- CSS aggiornato -->
+  <link rel="stylesheet" href="style.css?v=5">
 
-  <!-- Leaflet -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- Leaflet Routing Machine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 
   <style>
     body {
@@ -51,18 +49,17 @@
 <a href="index.html">⬅️ Torna alla Home</a>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
 <script>
-  // Inizializza mappa
-  var map = L.map('map').setView([45.4419, 12.3216], 14);
+  // 1️⃣ Inizializza mappa
+  var map = L.map('map').setView([45.4380, 12.3350], 15);
 
-  // OpenStreetMap
+  // 2️⃣ Tile OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
   }).addTo(map);
 
-  // Coordinate tappe
+  // 3️⃣ Marker delle tappe
   var tappe = [
     { nome: "1️⃣ Stazione Santa Lucia", coord: [45.4419, 12.3216] },
     { nome: "2️⃣ Ponte di Rialto", coord: [45.4380, 12.3358] },
@@ -80,29 +77,33 @@
       .bindPopup(`<div style="font-size:1.4em; font-weight:bold;">${tappa.nome}</div>`);
   });
 
-  // Funzione per creare routing tratti consecutivi
-  function creaTratto(start, end) {
-    L.Routing.control({
-      waypoints: [
-        L.latLng(start[0], start[1]),
-        L.latLng(end[0], end[1])
-      ],
-      createMarker: () => null, // marker proprio
-      lineOptions: { styles: [{ color: '#007bff', weight: 6 }] },
-      addWaypoints: false,
-      draggableWaypoints: false,
-      routeWhileDragging: false,
-      show: false,
-      router: L.Routing.osrmv1({ serviceUrl: 'https://router.project-osrm.org/route/v1' })
-    }).addTo(map);
-  }
+  // 4️⃣ Polyline manuale (percorsi pedonali)
+  // Lista di coordinate intermedie per seguire calli e ponti di Venezia
+  var percorso = [
+    // Stazione → Ponte di Rialto
+    [45.4419, 12.3216], [45.4415, 12.3240], [45.4405, 12.3275],
+    [45.4395, 12.3305], [45.4387, 12.3340], [45.4380, 12.3358],
+    // Rialto → Mercato
+    [45.4380, 12.3358], [45.4385, 12.3352], [45.4392, 12.3349],
+    // Mercato → Piazza San Marco
+    [45.4392, 12.3349], [45.4388, 12.3355], [45.4375, 12.3370],
+    [45.4360, 12.3385], [45.4340, 12.3399],
+    // Piazza San Marco → Basilica di San Marco
+    [45.4340, 12.3399], [45.4343, 12.3398], [45.4345, 12.3399],
+    // Basilica → Campo Santa Margherita
+    [45.4345, 12.3399], [45.4350, 12.3385], [45.4360, 12.3365],
+    [45.4368, 12.3345], [45.4378, 12.3325], [45.4385, 12.3300],
+    [45.4390, 12.3275], [45.4400, 12.3250], [45.4410, 12.3230],
+    [45.4336, 12.3217],
+    // Campo Santa Margherita → Stazione
+    [45.4336, 12.3217], [45.4350, 12.3220], [45.4365, 12.3230],
+    [45.4380, 12.3240], [45.4395, 12.3255], [45.4419, 12.3216]
+  ];
 
-  // Crea tutti i tratti consecutivi
-  for (let i = 0; i < tappe.length - 1; i++) {
-    creaTratto(tappe[i].coord, tappe[i+1].coord);
-  }
+  // Aggiungi Polyline alla mappa
+  L.polyline(percorso, { color: '#007bff', weight: 6 }).addTo(map);
 
-  // GPS utente
+  // 5️⃣ Posizione GPS utente
   map.locate({ setView: false, enableHighAccuracy: true });
 
   map.on('locationfound', function(e) {
@@ -115,9 +116,13 @@
   map.on('locationerror', function(e) {
     console.warn("GPS non disponibile: " + e.message);
   });
-
 </script>
 
 </body>
 </html>
+
+
+</body>
+</html>
+
 
