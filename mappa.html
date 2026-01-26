@@ -2,16 +2,16 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Mappa del percorso</title>
+  <title>Percorso audioguida Venezia</title>
 
-  <!-- CSS aggiornato con trucco anti-cache -->
-  <link rel="stylesheet" href="style.css?v=2">
+  <!-- CSS (anti-cache) -->
+  <link rel="stylesheet" href="style.css?v=3">
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Leaflet Routing Machine -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 
   <style>
     body {
@@ -21,84 +21,93 @@
 
     h1 {
       text-align: center;
-      padding: 10px;
       font-size: 1.6em;
+      padding: 10px;
     }
 
     #map {
-      height: 90vh; /* mappa più grande */
+      height: 88vh;
       width: 100%;
     }
 
-    a, button {
+    a {
       display: block;
+      margin: 12px;
+      padding: 14px;
       text-align: center;
-      margin: 15px;
       font-size: 1.4em;
-      padding: 12px 20px;
-      border-radius: 12px;
       background-color: #2b7de9;
       color: white;
-      border: none;
-      cursor: pointer;
       text-decoration: none;
-    }
-
-    a:hover, button:hover {
-      background-color: #1a5bb8;
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🗺️ Percorso della visita</h1>
+<h1>🚶‍♂️ Percorso audioguida Venezia</h1>
 
-  <div id="map"></div>
+<div id="map"></div>
 
-  <a href="index.html">⬅️ Torna alla Home</a>
+<a href="index.html">⬅️ Torna alla Home</a>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
-  <script>
-    // 1️⃣ Creiamo la mappa centrata sulla città (esempio Milano)
-    var map = L.map('map').setView([45.4642, 9.1900], 14);
+<script>
+  // 1️⃣ Inizializziamo la mappa
+  var map = L.map('map').setView([45.4419, 12.3216], 14);
 
-    // 2️⃣ Carichiamo la mappa OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
+  // 2️⃣ Mappa OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
 
-    // 3️⃣ Marker delle tappe con popup grandi
-    L.marker([45.4642, 9.1900])
+  // 3️⃣ Coordinate delle tappe (ordine della gita)
+  var tappe = [
+    { nome: "1️⃣ Stazione Santa Lucia", coord: [45.4419, 12.3216] },
+    { nome: "2️⃣ Ponte di Rialto", coord: [45.4380, 12.3358] },
+    { nome: "3️⃣ Mercato di Rialto", coord: [45.4392, 12.3349] },
+    { nome: "4️⃣ Piazza San Marco", coord: [45.4340, 12.3399] },
+    { nome: "5️⃣ Basilica di San Marco", coord: [45.4345, 12.3399] },
+    { nome: "6️⃣ Campo Santa Margherita", coord: [45.4336, 12.3217] },
+    { nome: "7️⃣ Ritorno alla Stazione", coord: [45.4419, 12.3216] }
+  ];
+
+  // 4️⃣ Aggiungiamo i marker
+  tappe.forEach(tappa => {
+    L.marker(tappa.coord)
       .addTo(map)
-      .bindPopup('<div style="font-size:1.4em; font-weight:bold; color:#333;">📍 Duomo di Milano</div>');
+      .bindPopup(`<div style="font-size:1.4em; font-weight:bold;">${tappa.nome}</div>`);
+  });
 
-    L.marker([45.4670, 9.1890])
+  // 5️⃣ Creiamo il percorso pedonale reale
+  L.Routing.control({
+    waypoints: tappe.map(t => L.latLng(t.coord[0], t.coord[1])),
+    lineOptions: {
+      styles: [{ color: '#007bff', weight: 6 }]
+    },
+    addWaypoints: false,
+    draggableWaypoints: false,
+    routeWhileDragging: false,
+    show: false,
+    router: L.Routing.osrmv1({
+      serviceUrl: 'https://router.project-osrm.org/route/v1'
+    })
+  }).addTo(map);
+
+  // 6️⃣ GPS dell'utente
+  map.locate({ setView: false, enableHighAccuracy: true });
+
+  map.on('locationfound', function(e) {
+    L.marker(e.latlng)
       .addTo(map)
-      .bindPopup('<div style="font-size:1.4em; font-weight:bold; color:#333;">📍 Galleria Vittorio Emanuele II</div>');
+      .bindPopup("📍 Sei qui")
+      .openPopup();
+  });
 
-    L.marker([45.4685, 9.1815])
-      .addTo(map)
-      .bindPopup('<div style="font-size:1.4em; font-weight:bold; color:#333;">📍 Castello Sforzesco</div>');
-
-    // 4️⃣ Mostriamo la posizione dell'utente
-    map.locate({setView: true, maxZoom: 16, timeout: 10000, enableHighAccuracy: true});
-
-    function onLocationFound(e) {
-      var radius = e.accuracy;
-      L.marker(e.latlng).addTo(map)
-        .bindPopup("Sei qui! (circa " + Math.round(radius) + " metri)").openPopup();
-    }
-
-    map.on('locationfound', onLocationFound);
-
-    function onLocationError(e) {
-      alert("Impossibile ottenere la posizione: " + e.message);
-    }
-
-    map.on('locationerror', onLocationError);
-  </script>
+</script>
 
 </body>
 </html>
@@ -106,4 +115,5 @@
 
 </body>
 </html>
+
 
