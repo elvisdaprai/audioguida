@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>Mappa del percorso</title>
 
+  <!-- CSS aggiornato con trucco anti-cache -->
+  <link rel="stylesheet" href="style.css?v=2">
+
   <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
@@ -19,27 +22,32 @@
     h1 {
       text-align: center;
       padding: 10px;
+      font-size: 1.6em;
     }
 
     #map {
-      height: 80vh;
+      height: 90vh; /* mappa più grande */
       width: 100%;
     }
 
-    a {
+    a, button {
       display: block;
       text-align: center;
       margin: 15px;
+      font-size: 1.4em;
+      padding: 12px 20px;
+      border-radius: 12px;
+      background-color: #2b7de9;
+      color: white;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    a:hover, button:hover {
+      background-color: #1a5bb8;
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log('Service Worker registrato!'));
-  }
-  </script>
-
 </head>
 <body>
 
@@ -53,7 +61,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // 1️⃣ Creiamo la mappa e scegliamo il punto iniziale (es. Milano)
+    // 1️⃣ Creiamo la mappa centrata sulla città (esempio Milano)
     var map = L.map('map').setView([45.4642, 9.1900], 14);
 
     // 2️⃣ Carichiamo la mappa OpenStreetMap
@@ -61,21 +69,21 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // 3️⃣ Aggiungiamo i marker delle tappe
+    // 3️⃣ Marker delle tappe con popup grandi
     L.marker([45.4642, 9.1900])
       .addTo(map)
-      .bindPopup('📍 Duomo di Milano');
+      .bindPopup('<div style="font-size:1.4em; font-weight:bold; color:#333;">📍 Duomo di Milano</div>');
 
     L.marker([45.4670, 9.1890])
       .addTo(map)
-      .bindPopup('📍 Galleria Vittorio Emanuele II');
+      .bindPopup('<div style="font-size:1.4em; font-weight:bold; color:#333;">📍 Galleria Vittorio Emanuele II</div>');
 
     L.marker([45.4685, 9.1815])
       .addTo(map)
-      .bindPopup('📍 Castello Sforzesco');
+      .bindPopup('<div style="font-size:1.4em; font-weight:bold; color:#333;">📍 Castello Sforzesco</div>');
 
     // 4️⃣ Mostriamo la posizione dell'utente
-    map.locate({setView: true, maxZoom: 16});
+    map.locate({setView: true, maxZoom: 16, timeout: 10000, enableHighAccuracy: true});
 
     function onLocationFound(e) {
       var radius = e.accuracy;
@@ -85,7 +93,6 @@
 
     map.on('locationfound', onLocationFound);
 
-    // 5️⃣ Gestione errori GPS
     function onLocationError(e) {
       alert("Impossibile ottenere la posizione: " + e.message);
     }
@@ -95,3 +102,8 @@
 
 </body>
 </html>
+
+
+</body>
+</html>
+
