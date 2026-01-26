@@ -5,7 +5,7 @@
   <title>Percorso audioguida Venezia</title>
 
   <!-- CSS aggiornato -->
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -59,14 +59,14 @@
     attribution: '© OpenStreetMap'
   }).addTo(map);
 
-  // 3️⃣ Marker delle tappe
+  // 3️⃣ Marker delle tappe aggiornate
   var tappe = [
     { nome: "1️⃣ Stazione Santa Lucia", coord: [45.4419, 12.3216] },
     { nome: "2️⃣ Ponte di Rialto", coord: [45.4380, 12.3358] },
     { nome: "3️⃣ Mercato di Rialto", coord: [45.4392, 12.3349] },
     { nome: "4️⃣ Piazza San Marco", coord: [45.4340, 12.3399] },
     { nome: "5️⃣ Basilica di San Marco", coord: [45.4345, 12.3399] },
-    { nome: "6️⃣ Campo Santa Margherita", coord: [45.4336, 12.3217] },
+    { nome: "6️⃣ Campo Santa Margherita", coord: [45.43427835897984, 12.32384103888684] }, // aggiornato
     { nome: "7️⃣ Ritorno alla Stazione", coord: [45.4419, 12.3216] }
   ];
 
@@ -77,8 +77,7 @@
       .bindPopup(`<div style="font-size:1.4em; font-weight:bold;">${tappa.nome}</div>`);
   });
 
-  // 4️⃣ Polyline manuale (percorsi pedonali)
-  // Lista di coordinate intermedie per seguire calli e ponti di Venezia
+  // 4️⃣ Polyline manuale aggiornata
   var percorso = [
     // Stazione → Ponte di Rialto
     [45.4419, 12.3216], [45.4415, 12.3240], [45.4405, 12.3275],
@@ -90,14 +89,13 @@
     [45.4360, 12.3385], [45.4340, 12.3399],
     // Piazza San Marco → Basilica di San Marco
     [45.4340, 12.3399], [45.4343, 12.3398], [45.4345, 12.3399],
-    // Basilica → Campo Santa Margherita
-    [45.4345, 12.3399], [45.4350, 12.3385], [45.4360, 12.3365],
-    [45.4368, 12.3345], [45.4378, 12.3325], [45.4385, 12.3300],
-    [45.4390, 12.3275], [45.4400, 12.3250], [45.4410, 12.3230],
-    [45.4336, 12.3217],
+    // Basilica → Campo Santa Margherita (aggiornato)
+    [45.4345, 12.3399], [45.4345, 12.3385], [45.4347, 12.3370],
+    [45.4349, 12.3350], [45.4349, 12.3330], [45.4348, 12.3310],
+    [45.4346, 12.3290], [45.4345, 12.3270], [45.43427835897984, 12.32384103888684],
     // Campo Santa Margherita → Stazione
-    [45.4336, 12.3217], [45.4350, 12.3220], [45.4365, 12.3230],
-    [45.4380, 12.3240], [45.4395, 12.3255], [45.4419, 12.3216]
+    [45.43427835897984, 12.32384103888684], [45.4350, 12.3245], [45.4365, 12.3260],
+    [45.4380, 12.3275], [45.4395, 12.3255], [45.4419, 12.3216]
   ];
 
   // Aggiungi Polyline alla mappa
@@ -121,8 +119,7 @@
 </body>
 </html>
 
-
-</body>
 </html>
+
 
 
