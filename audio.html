@@ -52,5 +52,38 @@
   <audio id="player"></audio>
 
   <script src="app.js"></script>
+  <script>
+let audio = new Audio();
+let currentFile = "";
+
+function playAudio(file) {
+
+  // Se cambio file
+  if (currentFile !== file) {
+    audio.pause();
+    audio = new Audio(file);
+    currentFile = file;
+  }
+
+  audio.play();
+}
+
+function pauseAudio() {
+  audio.pause();
+}
+
+function toggleAudio(file) {
+  if (currentFile !== file) {
+    playAudio(file);
+    return;
+  }
+
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+</script>
 </body>
 </html>
